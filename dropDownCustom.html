@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+    <script type="text/javascript" src="sideBar.js"></script>
+
+    <style>
+
+select {
+    outline: 0;
+    width: 150px;
+    height: 40px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: 1px solid #dbdbdb;
+    color: #555;
+
+    appearance: none;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path fill='none' stroke='%23aaa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+select optgroup {
+    background: #999;
+    color: #eee;
+}
+select option {
+    background: #fff;
+    color: #555;
+}
+
+
+
+
+
+
+
+
+.dropDownCustom {
+    margin: 5px;
+    display: inline-block;
+}
+.dropDownCustom * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+    width: 200px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.dropDownCustom .hide {
+    height: 0 !important;
+    opacity: 0;
+}
+.dropDownCustom button {
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #dbdbdb;
+    color: #555;
+
+    appearance: none;
+    /* background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><path fill='none' stroke='%23aaa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center; */
+
+    background-color: #fff;
+    text-align: left;
+    padding: 5px 10px;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.dropDownCustom button::after {
+    content: "";
+    position: relative;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><path fill='none' stroke='%23aaa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
+    width: 16px;
+    height: 14px;
+    transition: .3s;
+}
+.dropDownCustom button:has(+ article:not(.hide))::after {
+    transform: rotate(180deg);
+}
+.dropDownCustom article {
+    background: #FFF;
+    border: 1px solid #C4C4C4;
+    box-shadow: 4px 4px 14px #00000026;
+    border-radius: 10px;
+    margin-top: 2px;
+    overflow: hidden;
+    position: absolute;
+    transition: height .3s;
+}
+.dropDownCustom ul {
+    border-top: 1px solid #ddd;
+    overflow: hidden scroll;
+    max-height: 300px;
+    overscroll-behavior: contain;
+}
+.dropDownCustom ul >li {
+    color: #555;
+    padding: 5px;
+    margin: 5px;
+    position: relative;
+}
+.dropDownCustom ul >li::before {
+    content: "";
+    width: 0;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #ffeab6;
+    transition: .3s cubic-bezier(0, 0, 0, 1);
+    border-radius: 10px;
+}
+.dropDownCustom ul >li p {
+    position: relative;
+}
+.dropDownCustom ul >li:hover p {
+    color: #000;
+}
+.dropDownCustom ul >li:hover::before {
+    width: calc(100% - 10px);
+}
+.dropDownCustom ul li.hide {
+    display: none;
+}
+.dropDownCustom input {
+    padding: 5px;
+    margin: 5px;
+    width: calc(100% - 10px);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: 0;
+    color: #555;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="%23B7B7B7"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+}
+.dropDownCustom ul::-webkit-scrollbar {
+    width: 5px;
+}
+.dropDownCustom ul::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+.dropDownCustom ul::-webkit-scrollbar-track {
+    background-color: #eee;
+}
+    </style>
+</head>
+<body>
+<!-- <section id="dropDownCustom" class="dropDownCustom">
+    <button type="button">과일선택</button>
+    <ul class="hide">
+        <li><p value="apple">사과</p></li>
+        <li><p value="strawberry">딸기</p></li>
+        <li><p value="tomato">토마토</p></li>
+        <li><p value="banana">바나나</p></li>
+        <li><p value="koreanmelon">참외</p></li>
+        <li><p value="orange">오렌지</p></li>
+    </ul>
+</section> -->
+<div id="here"></div>
+
+    <div style="background: goldenrod; height: 100vh;"></div>
+</body>
+<script>
+    const dropDownCustom = (rawObjectArray, injectElementId, setValue, option = {nameKey: "name", valueKey: "value", initialLabel: "선택하세요.", searchBox: true}) => {
+
+        const uniqueNumber = Math.floor(Math.random() * 10e5)
+        const dropDownCustomName = "dropDownCustom"
+        const dropDownCustomId = `${dropDownCustomName}-${uniqueNumber}`
+
+        const createDropDownCustom = () => {
+            document.querySelector(`#${injectElementId}`).insertAdjacentHTML("beforeend", `
+                <section id="${dropDownCustomId}" class="dropDownCustom">
+                    <button type="button">${option.initialLabel}</button>
+                    <article class="hide">
+                        ${option.searchBox ? `<input type="text">` : ``}
+                        <ul>
+                            ${
+                                rawObjectArray
+                                .map(e => `<li><p value="${e[option.valueKey]}">${e[option.nameKey]}</p></li>`)
+                                .join("")
+                            }
+                        </ul>
+                    </article>
+                </section>
+            `)
+        }
+        createDropDownCustom()
+        
+        const dropDownCustom = document.querySelector(`#${dropDownCustomId}`)
+
+        // article 에 height 넣기
+        const article = dropDownCustom.querySelector("article")
+        article.style.height = article.scrollHeight + "px"
+
+        // const setInitialValue = () => {
+        //     const target = dropDownCustom.querySelector("ul li p")
+        //     dropDownCustom.querySelector("button").textContent = target.textContent
+        //     setValue(target.value)
+        // }
+        // setInitialValue()
+
+        dropDownCustom.addEventListener("click", e => {
+            // console.log('choice', e.target)
+
+            // 드롭다운 클릭시 리스트 보여주기
+            if(e.target.tagName !== "INPUT")
+            e.currentTarget.querySelector("article").classList.toggle("hide")
+            const tagDetectArray = ["LI", "P"]
+            if(tagDetectArray.some(element => element === e.target.tagName)) {
+                const getTarget = () => {
+                    switch(e.target.tagName) {
+                        case tagDetectArray[0]: return e.target.children[0]
+                        case tagDetectArray[1]: return e.target
+                        default:
+                    }
+                }
+                const target = getTarget()
+                e.currentTarget.querySelector("button").textContent = target.textContent
+                setValue(target.getAttribute("value"))
+            }
+        })
+
+        if(option.searchBox)
+        dropDownCustom.querySelector("input").addEventListener("input", e => {
+            dropDownCustom.querySelectorAll("li").forEach(element => {
+                if(element.querySelector("p").textContent.search(e.target.value) === -1) element.classList.add("hide")
+                else element.classList.remove("hide")
+            })
+        })
+
+        // 빈 화면 클릭시 닫기
+        window.addEventListener("click", e => {
+            if(!e.target.closest(`#${dropDownCustomId}`))
+            dropDownCustom.querySelector("article").classList.add("hide")
+        })
+    }
+
+    const example = [
+        {name: "사과", value: "apple"},
+        {name: "딸기", value: "strawberry"},
+        {name: "토마토", value: "tomato"},
+        {name: "바나나", value: "banana"},
+        {name: "참외", value: "koreanmelon"},
+        {name: "오렌지", value: "orange"},
+        
+        {name: "사과1", value: "apple"},
+        {name: "딸기1", value: "strawberry"},
+        {name: "토마토1", value: "tomato"},
+        {name: "바나나1", value: "banana"},
+        {name: "참외1", value: "koreanmelon"},
+        {name: "오렌지1", value: "orange"},
+        {name: "사과2", value: "apple"},
+        {name: "딸기2", value: "strawberry"},
+        {name: "토마토2", value: "tomato"},
+        {name: "바나나2", value: "banana"},
+        {name: "참외2", value: "koreanmelon"},
+        {name: "오렌지2", value: "orange"},
+        {name: "사과3", value: "apple"},
+        {name: "딸기3", value: "strawberry"},
+        {name: "토마토3", value: "tomato"},
+        {name: "바나나3", value: "banana"},
+        {name: "참외3", value: "koreanmelon"},
+        {name: "오렌지3", value: "orange"},
+    ]
+    dropDownCustom(example, "here", value => console.log("선택한 값 ", value))
+</script>
+</html>
