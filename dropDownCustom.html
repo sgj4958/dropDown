@@ -7,38 +7,6 @@
     <script type="text/javascript" src="sideBar.js"></script>
 
     <style>
-
-select {
-    outline: 0;
-    width: 150px;
-    height: 40px;
-    padding: 5px 15px;
-    border-radius: 5px;
-    font-size: 14px;
-    border: 1px solid #dbdbdb;
-    color: #555;
-
-    appearance: none;
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path fill='none' stroke='%23aaa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-}
-select optgroup {
-    background: #999;
-    color: #eee;
-}
-select option {
-    background: #fff;
-    color: #555;
-}
-
-
-
-
-
-
-
-
 .dropDownCustom {
     margin: 5px;
     display: inline-block;
@@ -63,9 +31,6 @@ select option {
     color: #555;
 
     appearance: none;
-    /* background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><path fill='none' stroke='%23aaa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center; */
 
     background-color: #fff;
     text-align: left;
@@ -108,20 +73,24 @@ select option {
     padding: 5px;
     margin: 5px;
     position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 .dropDownCustom ul >li::before {
     content: "";
     width: 0;
     height: 100%;
     position: absolute;
-    left: 0;
+    left: -5px;
     top: 0;
     background: #ffeab6;
     transition: .3s cubic-bezier(0, 0, 0, 1);
-    border-radius: 10px;
+    border-radius: 0 15px 15px 0;
 }
 .dropDownCustom ul >li p {
     position: relative;
+    width: calc(100% - 30px);
 }
 .dropDownCustom ul >li:hover p {
     color: #000;
@@ -132,7 +101,7 @@ select option {
 .dropDownCustom ul li.hide {
     display: none;
 }
-.dropDownCustom input {
+.dropDownCustom input[type="text"] {
     padding: 5px;
     margin: 5px;
     width: calc(100% - 10px);
@@ -155,26 +124,55 @@ select option {
 .dropDownCustom ul::-webkit-scrollbar-track {
     background-color: #eee;
 }
+
+.dropDownCustom input[type="checkbox"] {
+    display: none;
+}
+input[type="checkbox"] + label{
+    width: 15px;
+    height: 15px;
+    border: 1px solid #aaa;
+    position: relative;
+    margin: 0 15px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+}
+input[type="checkbox"]:checked + label::after {
+    content:'✔';
+    color: deepskyblue;
+}
+.dropDownCustom[disable="true"] button {
+    cursor: not-allowed;
+    background: #ddd;
+}
+.dropDownCustom .dropDownCustomWarningWrap {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1px;
+}
+.dropDownCustom .dropDownCustomWarningWrap svg {
+    width: 20px;
+    margin-right: 5px;
+}
+.dropDownCustom .dropDownCustomWarningWrap .hide {
+    display: none;
+}
+.dropDownCustom .dropDownCustomWarningText {
+    text-wrap: pretty;
+    color: orangered;
+}
     </style>
 </head>
 <body>
-<!-- <section id="dropDownCustom" class="dropDownCustom">
-    <button type="button">과일선택</button>
-    <ul class="hide">
-        <li><p value="apple">사과</p></li>
-        <li><p value="strawberry">딸기</p></li>
-        <li><p value="tomato">토마토</p></li>
-        <li><p value="banana">바나나</p></li>
-        <li><p value="koreanmelon">참외</p></li>
-        <li><p value="orange">오렌지</p></li>
-    </ul>
-</section> -->
 <div id="here"></div>
 
-    <div style="background: goldenrod; height: 100vh;"></div>
+    <div id="back" style="background: goldenrod; height: 300vh;">유효성 검사</div>
 </body>
 <script>
-    const dropDownCustom = (rawObjectArray, injectElementId, setValue, option = {nameKey: "name", valueKey: "value", initialLabel: "선택하세요.", searchBox: true}) => {
+    const dropDownCustom = (rawObjectArray, injectElementId, setValue, option = {nameKey: "name", valueKey: "value", initialLabel: "선택하세요.", searchBox: true, multiple: true, max: 3, sort: true, deleteDuplicate: true, disable: false, setFirstValue: true, validationMinimum: 1, validationString: "최소 #validationMinimum개 이상 선택하세요."}) => {
 
         const uniqueNumber = Math.floor(Math.random() * 10e5)
         const dropDownCustomName = "dropDownCustom"
@@ -182,18 +180,47 @@ select option {
 
         const createDropDownCustom = () => {
             document.querySelector(`#${injectElementId}`).insertAdjacentHTML("beforeend", `
-                <section id="${dropDownCustomId}" class="dropDownCustom">
+                <section id="${dropDownCustomId}" class="dropDownCustom" disable="${option.disable}">
                     <button type="button">${option.initialLabel}</button>
                     <article class="hide">
-                        ${option.searchBox ? `<input type="text">` : ``}
+                        ${option.searchBox ? `<input type="text" id="dropDownCustomSearch" title="검색">` : ``}
                         <ul>
                             ${
-                                rawObjectArray
-                                .map(e => `<li><p value="${e[option.valueKey]}">${e[option.nameKey]}</p></li>`)
-                                .join("")
+                                // reduce 사용한 방법
+                                // Array(Object).reduce(a => (option.sort ? a.sort((a, b) => a.name.localeCompare(b.name)) : a), (
+                                //     option.deleteDuplicate 
+                                //     ? rawObjectArray.reduce((a, c) => a.concat(
+                                //         a.findIndex(b => b.value === c.value) === -1 ? c : []
+                                //     ), []) 
+                                //     : rawObjectArray))
+
+                                // set 사용한 방법
+                                // [...new Set(rawObjectArray.map(a => a.value))]
+                                // .map(a => rawObjectArray.find(b => b.value === a))
+                                // .sort((a, b) => option.sort ? a.name.localeCompare(b.name) : null)
+
+                                // filter 사용한 방법
+                                rawObjectArray.filter((a, b, c) => c.findIndex(d => d.value === a.value) === b)
+                                .sort((a, b) => option.sort ? a.name.localeCompare(b.name) : null)
+                                .map((e, i) => `
+                                    <li>
+                                        ${option.multiple ? `
+                                        <input type="checkbox" id="dropDownCustomCheckBox-${i}" name="dropDownCustomCheckBox-${i}" title="선택">
+                                        <label for="dropDownCustomCheckBox-${i}"></label>
+                                        ` : ``}
+                                        <p value="${e[option.valueKey]}">${e[option.nameKey]}</p>
+                                    </li>
+                                `).join("")
                             }
                         </ul>
                     </article>
+
+                    <div class="dropDownCustomWarningWrap hide">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 -960 960 960" fill="#ff0000">
+                            <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                        </svg>
+                        <span class="dropDownCustomWarningText"></span>
+                    </div>
                 </section>
             `)
         }
@@ -205,36 +232,93 @@ select option {
         const article = dropDownCustom.querySelector("article")
         article.style.height = article.scrollHeight + "px"
 
-        // const setInitialValue = () => {
-        //     const target = dropDownCustom.querySelector("ul li p")
-        //     dropDownCustom.querySelector("button").textContent = target.textContent
-        //     setValue(target.value)
-        // }
-        // setInitialValue()
+        const click = target => {
+            const setText = name => dropDownCustom.querySelector("button").textContent = name
+            if(option.multiple) {
 
+                // 선택한 체크박스가 체크안된 상태이고 최대치까지 선택하였을 경우
+                if(!target.parentNode.querySelector("input[type='checkbox']").checked 
+                && dropDownCustom.querySelectorAll("input[type='checkbox']:checked").length === Number(option.max))
+                return alert(`최대 ${option.max}개까지만 선택할 수 있습니다.`)
+
+                // 다중선택일 때 체크박스 토글 (label 기능)
+                target.parentNode.querySelector("input[type='checkbox']").checked ^= true
+
+                const nameArray = []
+                const valueArray = []
+                dropDownCustom.querySelectorAll("input[type='checkbox']:checked ~ p").forEach(element => {
+                    nameArray.push(element.textContent)
+                    valueArray.push(element.getAttribute("value"))
+                })
+
+                // 다중선택 값 넣기
+                setText(nameArray.length ? nameArray.join(", ") : option.initialLabel)
+                setValue(valueArray)
+            } else {
+                // 단일선택 값 넣기
+                setText(target.textContent)
+                setValue(target.getAttribute("value"))
+            }
+        }
+
+        if(!option.disable)
         dropDownCustom.addEventListener("click", e => {
-            // console.log('choice', e.target)
 
-            // 드롭다운 클릭시 리스트 보여주기
-            if(e.target.tagName !== "INPUT")
+            if(e.target.type === "text") return
+
+            // 드롭다운 클릭시 리스트 보여주기 & 검색창 클릭시 닫히지 않게 하기 & 다중선택일 때 닫히지 않게 하기
+            if(e.target.tagName !== "INPUT" && !option.multiple || e.target.tagName === "BUTTON")
             e.currentTarget.querySelector("article").classList.toggle("hide")
-            const tagDetectArray = ["LI", "P"]
+
+            // 리스트 클릭시 값 넣기
+            const tagDetectArray = ["LI", "P", "INPUT", "LABEL"]
             if(tagDetectArray.some(element => element === e.target.tagName)) {
+                
                 const getTarget = () => {
                     switch(e.target.tagName) {
-                        case tagDetectArray[0]: return e.target.children[0]
+                        case tagDetectArray[0]: return e.target.querySelector("p")
                         case tagDetectArray[1]: return e.target
+                        case tagDetectArray[2]:
+                        case tagDetectArray[3]: return e.target.parentNode.querySelector("p")
                         default:
                     }
                 }
                 const target = getTarget()
-                e.currentTarget.querySelector("button").textContent = target.textContent
-                setValue(target.getAttribute("value"))
+                return click(target)
+
+                const setText = name => e.currentTarget.querySelector("button").textContent = name
+                if(option.multiple) {
+
+                    // 선택한 체크박스가 체크안된 상태이고 최대치까지 선택하였을 경우
+                    if(!target.parentNode.querySelector("input[type='checkbox']").checked 
+                    && dropDownCustom.querySelectorAll("input[type='checkbox']:checked").length === Number(option.max))
+                    return alert(`최대 ${option.max}개까지만 선택할 수 있습니다.`)
+
+                    // 다중선택일 때 체크박스 토글 (label 기능)
+                    target.parentNode.querySelector("input[type='checkbox']").checked ^= true
+
+                    const nameArray = []
+                    const valueArray = []
+                    dropDownCustom.querySelectorAll("input[type='checkbox']:checked ~ p").forEach(element => {
+                        nameArray.push(element.textContent)
+                        valueArray.push(element.getAttribute("value"))
+                    })
+
+                    // 다중선택 값 넣기
+                    setText(nameArray.length ? nameArray.join(", ") : option.initialLabel)
+                    setValue(valueArray)
+                } else {
+                    // 단일선택 값 넣기
+                    setText(target.textContent)
+                    setValue(target.getAttribute("value"))
+                }
             }
         })
+        if(option.setFirstValue) click(dropDownCustom.querySelector("p"))
 
+        // 검색 기능
         if(option.searchBox)
-        dropDownCustom.querySelector("input").addEventListener("input", e => {
+        dropDownCustom.querySelector("input[type='text']").addEventListener("input", e => {
             dropDownCustom.querySelectorAll("li").forEach(element => {
                 if(element.querySelector("p").textContent.search(e.target.value) === -1) element.classList.add("hide")
                 else element.classList.remove("hide")
@@ -246,6 +330,20 @@ select option {
             if(!e.target.closest(`#${dropDownCustomId}`))
             dropDownCustom.querySelector("article").classList.add("hide")
         })
+
+        window["dropDownCustomValidation"] = () => {
+            const select = dropDownCustom.querySelectorAll("input[type='checkbox']:checked").length
+            const textElement = dropDownCustom.querySelector(".dropDownCustomWarningText")
+            const wrapClass = dropDownCustom.querySelector(".dropDownCustomWarningWrap").classList
+            if(option.validationMinimum > select) {
+                textElement.textContent = option.validationString.replace("#validationMinimum", option.validationMinimum)
+                wrapClass.remove("hide")
+                window.scroll(dropDownCustom.offsetWidth, dropDownCustom.offsetTop)
+            } else {
+                textElement.textContent = ""
+                wrapClass.add("hide")
+            }
+        }
     }
 
     const example = [
@@ -256,25 +354,27 @@ select option {
         {name: "참외", value: "koreanmelon"},
         {name: "오렌지", value: "orange"},
         
-        {name: "사과1", value: "apple"},
-        {name: "딸기1", value: "strawberry"},
-        {name: "토마토1", value: "tomato"},
-        {name: "바나나1", value: "banana"},
-        {name: "참외1", value: "koreanmelon"},
-        {name: "오렌지1", value: "orange"},
-        {name: "사과2", value: "apple"},
-        {name: "딸기2", value: "strawberry"},
-        {name: "토마토2", value: "tomato"},
-        {name: "바나나2", value: "banana"},
-        {name: "참외2", value: "koreanmelon"},
-        {name: "오렌지2", value: "orange"},
-        {name: "사과3", value: "apple"},
-        {name: "딸기3", value: "strawberry"},
-        {name: "토마토3", value: "tomato"},
-        {name: "바나나3", value: "banana"},
-        {name: "참외3", value: "koreanmelon"},
-        {name: "오렌지3", value: "orange"},
+        {name: "사과", value: "apple"},
+        {name: "딸기", value: "strawberry"},
+        {name: "토마토", value: "tomato"},
+        {name: "바나나", value: "banana"},
+        {name: "참외", value: "koreanmelon"},
+        {name: "오렌지", value: "orange"},
+        {name: "사과2", value: "apple2"},
+        {name: "딸기2", value: "strawberry2"},
+        {name: "토마토2", value: "tomato2"},
+        {name: "바나나2", value: "banana2"},
+        {name: "참외2", value: "koreanmelon2"},
+        {name: "오렌지2", value: "orange2"},
+        {name: "사과3", value: "apple3"},
+        {name: "딸기3", value: "strawberry3"},
+        {name: "토마토3", value: "tomato3"},
+        {name: "바나나3", value: "banana3"},
+        {name: "참외3", value: "koreanmelon3"},
+        {name: "오렌지3", value: "orange3"},
     ]
     dropDownCustom(example, "here", value => console.log("선택한 값 ", value))
+
+    back.addEventListener("click", () => dropDownCustomValidation())
 </script>
 </html>
