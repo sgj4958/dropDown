@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+    <script type="text/javascript" src="sideBar.js"></script>
+    <script type="text/javascript" src="dropDownCustom.js"></script>
+
+    <style>
+        #main {
+            height: 200vh;
+            background: seashell;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        nav#sideWrap #sideHead #sideLogo {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div id="dropDownA"></div>
+        <div id="dropDownB"></div>
+    </div>
+</body>
+<script>
+    sideBar([
+            {cate1: '중분류1', cate2: '소분류1', link: '11', data: []},
+            {cate1: '중분류1', cate2: '소분류2', link: '12', data: []},
+            {cate1: '중분류1', cate2: '소분류3', link: '13', data: []},
+            {cate1: '중분류1', cate2: '소분류4', link: '14', data: []},
+            {cate1: '중분류1', cate2: '소분류5', link: '15', data: []},
+            {cate1: '중분류1', cate2: '소분류6', link: '16', data: []},
+
+            {cate1: '중분류2', cate2: '소분류1', link: '21', data: []},
+            {cate1: '중분류2', cate2: '소분류2', link: '22', data: []},
+            {cate1: '중분류2', cate2: '소분류3', link: '23', data: []},
+            {cate1: '중분류2', cate2: '소분류4', link: '24', data: []},
+
+            {cate1: '중분류3', cate2: '소분류1', link: '31', data: []},
+            {cate1: '중분류3', cate2: '소분류2', link: '32', data: []},
+        ],
+        ["cate1", "cate2"],
+        ["search", "home", "settings", "favorite", "star", "more_vert"],
+        "link",
+        `<svg width="24" height="24" viewBox="0 0 24 24" fill="green" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z"></path>
+        </svg>`,
+        // "https://www.starbucks.co.kr:7643/common/img/common/logo.png",
+        {
+            router: a => alert('router:::' + a),
+            removeSideButton: false,
+            coverAnimation: false
+        }
+    )
+
+    const dropDownSelect = {
+        A: [],
+        B: []
+    }
+    dropDownCustom([
+        {name: "사과", value: "apple"},
+        {name: "딸기", value: "strawberry"},
+        {name: "토마토", value: "tomato"},
+        {name: "바나나", value: "banana"},
+        {name: "참외", value: "koreanmelon"},
+        {name: "오렌지", value: "orange"},
+        
+        {name: "사과 중복", value: "apple"},
+        {name: "딸기 중복", value: "strawberry"},
+        {name: "토마토 중복", value: "tomato"},
+        {name: "바나나 중복", value: "banana"},
+        {name: "참외 중복", value: "koreanmelon"},
+        {name: "오렌지 중복", value: "orange"},
+        {name: "사과2", value: "apple2"},
+        {name: "딸기2", value: "strawberry2"},
+        {name: "토마토2", value: "tomato2"},
+        {name: "바나나2", value: "banana2"},
+        {name: "참외2", value: "koreanmelon2"},
+        {name: "오렌지2", value: "orange2"},
+        {name: "사과3", value: "apple3"},
+        {name: "딸기3", value: "strawberry3"},
+        {name: "토마토3", value: "tomato3"},
+        {name: "바나나3", value: "banana3"},
+        {name: "참외3", value: "koreanmelon3"},
+        {name: "오렌지3", value: "orange3"},
+    ], "dropDownA", value => dropDownSelect.A = value, {validationMinimum: 2})
+    dropDownCustom([
+        {name: "사 과", value: "apple"},
+        {name: "딸 기", value: "strawberry"},
+        {name: "토 마 토", value: "tomato"},
+        {name: "바 나 나", value: "banana"},
+        {name: "참 외", value: "koreanmelon"},
+        {name: "오 렌 지", value: "orange"},
+    ], "dropDownB", value => dropDownSelect.B = value, {multiple: false, validationMinimum: 1})
+</script>
+</html>

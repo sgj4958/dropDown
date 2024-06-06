@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+    <script type="text/javascript" src="sideBar.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+.form-select {
+    /* background-blend-mode: exclusion;
+    color: rgb(102, 102, 102);
+    height: 38px;
+    border-radius: 5px;
+    padding: 0.5rem 0.95rem; */
+}
+.form-select {
+    /* appearance: none;
+    background-color: rgb(255, 255, 255);
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 16px 12px;
+    color: rgb(73, 80, 87);
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.625;
+    width: 100%;
+    background-position: right 0.7rem center;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(219, 219, 219);
+    border-image: initial;
+    border-radius: 0.2rem;
+    padding: 0.25rem 2.1rem 0.25rem 0.7rem;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s; */
+}
+
+select {
+    outline: 0;
+    width: 150px;
+    height: 40px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: 1px solid #dbdbdb;
+    color: #555;
+
+    appearance: none;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path fill='none' stroke='%23aaa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+select optgroup {
+    margin: 5px;
+    padding: 5px;
+    display: block;
+    line-height: 10px;
+
+    background: #999;
+    color: #eee;
+}
+select option {
+    background: #fff;
+    color: #555;
+}
+    </style>
+</head>
+<body>
+    <select name="selectFruit" title="드롭다운">
+        <optgroup label="빨간색">
+            <option value="apple" selected>사과</option>
+            <option value="strawberry">딸기</option>
+            <option value="tomato">토마토</option>
+        </optgroup>
+        
+        <optgroup label="노란색">
+            <option value="banana">바나나</option>
+            <option value="koreanmelon">참외</option>
+        </optgroup>
+        
+        <optgroup label="주황색">
+            <option value="orange">오렌지</option>
+        </optgroup>
+    </select>
+</body>
+<script>
+</script>
+</html>
